@@ -110,8 +110,8 @@ const Dashboard = () => {
     setQuickLoading(true);
     try {
       const result = await apiService.getRandomPendingIdiom();
-      if (result.success && result.data.randomId) {
-        window.location.href = `/idiom/${result.data.randomId}`;
+      if (result.success && result.data._id) {
+        window.location.href = `/idiom/${result.data._id}`;
       } else {
         setError(result.data.message || 'No pending idioms found');
       }
