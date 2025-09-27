@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import apiService from '../services/api';
 
 const AuthContext = createContext();
 
@@ -38,25 +39,17 @@ export const AuthProvider = ({ children }) => {
   // Login function
   const login = async (email, password) => {
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const result = await apiService.login(email, password);
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (result.success) {
         // Store token and user in state and localStorage
-        setToken(data.token);
-        setUser(data.user);
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        setToken(result.data.token);
+        setUser(result.data.user);
+        localStorage.setItem('token', result.data.token);
+        localStorage.setItem('user', JSON.stringify(result.data.user));
         return { success: true };
       } else {
-        return { success: false, message: data.message || 'Login failed' };
+        return { success: false, message: result.error || 'Login failed' };
       }
     } catch (error) {
       return { success: false, message: 'Network error. Please try again.' };
@@ -66,25 +59,17 @@ export const AuthProvider = ({ children }) => {
   // Signup function
   const signup = async (userData) => {
     try {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
+      const result = await apiService.signup(userData);
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (result.success) {
         // Auto login after successful signup
-        setToken(data.token);
-        setUser(data.user);
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        setToken(result.data.token);
+        setUser(result.data.user);
+        localStorage.setItem('token', result.data.token);
+        localStorage.setItem('user', JSON.stringify(result.data.user));
         return { success: true };
       } else {
-        return { success: false, message: data.message || 'Signup failed' };
+        return { success: false, message: result.error || 'Signup failed' };
       }
     } catch (error) {
       return { success: false, message: 'Network error. Please try again.' };
