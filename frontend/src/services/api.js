@@ -1,7 +1,7 @@
 // Centralized API service for making authenticated requests
 class ApiService {
   constructor() {
-    this.baseURL = import.meta.env.VITE_API_BASE || '/api'; 
+    this.baseURL = import.meta.env.VITE_API_BASE || 'https://bdbackend-ten.vercel.app/api'; 
     // Fallback to '/api' for local dev (proxy will catch it)
   }
 
